@@ -1,0 +1,30 @@
+{
+  "name": "create-ts-web-project",
+  "version": "1.0.0",
+  "description": "Quickly create a tiny web project",
+  "type": "module",
+  "bin": {
+    "create-ts-web-project": "bin/create-ts-web-project.js"
+  },
+  "devDependencies": {
+    "@types/node": "16",
+    "typescript": "~4.8.4"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "src",
+    "template"
+  ],
+  "keywords": [
+    "typescript",
+    "web",
+    "project"
+  ],
+  "author": "Avi Vahl",
+  "license": "MIT",
+  "prettier": {}
+}
