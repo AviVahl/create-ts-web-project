@@ -60,6 +60,9 @@ export async function createProject(projectName: string) {
   console.log(`Writing .prettierignore`);
   await writeFile(join(projectPath, ".prettierignore"), prettierIgnoreContent);
 
+  console.log(`Writing .npmrc`);
+  await writeFile(join(projectPath, ".npmrc"), npmRcContent);
+
   console.log(`Creating README`);
   await createReadme(join(projectPath, "README.md"), projectName);
 
@@ -116,6 +119,7 @@ const tscInitOptions = [
 
 const srcMainContent = `document.body.appendChild(document.createTextNode("Hello World"));\n`;
 const prettierIgnoreContent = ["dist", "tsconfig.json", ""].join("\n");
+const npmRcContent = `engine-strict=true\n`;
 
 async function createReadme(readmePath: string, projectName: string) {
   const readmeContent = [
@@ -146,6 +150,7 @@ interface PackageJson {
   scripts: Record<string, string>;
   devDependencies: Record<string, string>;
   prettier: Record<string, string>;
+  engines: Record<string, string>;
 }
 async function amendPackageJson(packageJsonPath: string) {
   const packageJson: PackageJson = JSON.parse(
@@ -169,6 +174,10 @@ async function amendPackageJson(packageJsonPath: string) {
     },
     devDependencies: packageJson.devDependencies,
     prettier: {},
+    engines: {
+      node: ">=16",
+      npm: ">=8",
+    },
   };
 
   for (const [key, value] of Object.entries(packageJson)) {
