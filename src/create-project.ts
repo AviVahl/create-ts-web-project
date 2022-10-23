@@ -2,6 +2,15 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import {
+  amendPackageJson,
+  editorConfigContent,
+  generateReadme,
+  npmRcContent,
+  prettierIgnoreContent,
+  srcMainContent,
+  tscInitOptions,
+} from "./helpers.js";
 
 export async function createProject(projectName: string) {
   const projectPath = join(process.cwd(), projectName);
@@ -49,13 +58,21 @@ export async function createProject(projectName: string) {
 
   console.log(`Amending package.json`);
   const packageJsonPath = join(projectPath, "package.json");
-  await amendPackageJson(packageJsonPath);
-
+  const originalPackageJson = JSON.parse(
+    await readFile(packageJsonPath, "utf8")
+  );
+  const newPackageJson = amendPackageJson(originalPackageJson);
+  await writeFile(
+    packageJsonPath,
+    JSON.stringify(newPackageJson, null, 2) + "\n"
+  );
   console.log(`Reinstalling deps post package.json change`);
   spawnCommand("npm", ["install"]);
 
   console.log(`Creating src folder`);
-  await createSrcFolder(projectPath);
+  const srcPath = join(projectPath, "src");
+  await mkdir(srcPath);
+  await writeFile(join(srcPath, "main.ts"), srcMainContent);
 
   console.log(`Writing .prettierignore`);
   await writeFile(join(projectPath, ".prettierignore"), prettierIgnoreContent);
@@ -64,7 +81,7 @@ export async function createProject(projectName: string) {
   await writeFile(join(projectPath, ".npmrc"), npmRcContent);
 
   console.log(`Creating README`);
-  await createReadme(join(projectPath, "README.md"), projectName);
+  await writeFile(join(projectPath, "README.md"), generateReadme(projectName));
 
   console.log(`Initializing scripts`);
   const scriptsPath = join(projectPath, "scripts");
@@ -85,120 +102,3 @@ export async function createProject(projectName: string) {
   console.log(`Creating .editorconfig`);
   await writeFile(join(projectPath, ".editorconfig"), editorConfigContent);
 }
-
-const tscInitOptions = [
-  "--target",
-  "es2022",
-  "--lib",
-  "es2022,dom",
-  "--module",
-  "node16",
-  "--moduleResolution",
-  "node16",
-  "--types",
-  " ",
-  "--sourceMap",
-  "--importsNotUsedAsValues",
-  "error",
-  "--skipLibCheck",
-  "false",
-  "--skipDefaultLibCheck",
-  "--noUnusedLocals",
-  "--noUnusedParameters",
-  "--exactOptionalPropertyTypes",
-  "--noImplicitReturns",
-  "--noFallthroughCasesInSwitch",
-  "--noUncheckedIndexedAccess",
-  "--noImplicitOverride",
-  "--noPropertyAccessFromIndexSignature",
-  "--newLine",
-  "lf",
-  "--outDir",
-  "./dist",
-];
-
-const srcMainContent = `document.body.appendChild(document.createTextNode("Hello World"));\n`;
-const prettierIgnoreContent = ["dist", "tsconfig.json", ""].join("\n");
-const npmRcContent = `engine-strict=true\n`;
-
-async function createReadme(readmePath: string, projectName: string) {
-  const readmeContent = [
-    `# ${projectName}`,
-    "",
-    "web project.",
-    "",
-    "### License",
-    "",
-    "MIT",
-    "",
-  ].join("\n");
-  await writeFile(readmePath, readmeContent);
-}
-
-async function createSrcFolder(projectPath: string) {
-  const srcPath = join(projectPath, "src");
-  await mkdir(srcPath);
-  await writeFile(join(srcPath, "main.ts"), srcMainContent);
-}
-
-interface PackageJson {
-  name: string;
-  main?: string | undefined;
-  version: string;
-  type: string;
-  description: string;
-  scripts: Record<string, string>;
-  devDependencies: Record<string, string>;
-  prettier: Record<string, string>;
-  engines: Record<string, string>;
-}
-async function amendPackageJson(packageJsonPath: string) {
-  const packageJson: PackageJson = JSON.parse(
-    await readFile(packageJsonPath, "utf8")
-  );
-
-  packageJson.devDependencies["typescript"] =
-    "~" + packageJson.devDependencies["typescript"]!.slice(1);
-
-  const newPackageJson: PackageJson = {
-    name: packageJson.name,
-    version: packageJson.version,
-    description: "Web Project",
-    type: "module",
-    main: undefined,
-    scripts: {
-      clean: "node scripts/clean.js",
-      build: "tsc",
-      watch: "npm run build -- -w",
-      start: "node scripts/start.js",
-    },
-    devDependencies: packageJson.devDependencies,
-    prettier: {},
-    engines: {
-      node: ">=16",
-      npm: ">=8",
-    },
-  };
-
-  for (const [key, value] of Object.entries(packageJson)) {
-    if (!(key in newPackageJson)) {
-      (newPackageJson as unknown as Record<string, unknown>)[key] = value;
-    }
-  }
-  await writeFile(
-    packageJsonPath,
-    JSON.stringify(newPackageJson, null, 2) + "\n"
-  );
-}
-
-const editorConfigContent = [
-  "root = true",
-  "",
-  "[*]",
-  "indent_style = space",
-  "indent_size = 2",
-  "charset = utf-8",
-  "trim_trailing_whitespace = true",
-  "insert_final_newline = true",
-  "",
-].join("\n");
