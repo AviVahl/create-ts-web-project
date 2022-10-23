@@ -86,7 +86,7 @@ export async function createProject(projectName: string) {
   console.log(`Initializing scripts`);
   const scriptsPath = join(projectPath, "scripts");
   await mkdir(scriptsPath);
-  for (const fileName of ["clean.js", "dev-server.js", "start.js"]) {
+  for (const fileName of ["clean.js", "start.js"]) {
     await copyFile(
       new URL(`../template/scripts/${fileName}`, import.meta.url),
       join(scriptsPath, fileName)
