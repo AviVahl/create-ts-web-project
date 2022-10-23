@@ -101,4 +101,8 @@ export async function createProject(projectName: string) {
 
   console.log(`Creating .editorconfig`);
   await writeFile(join(projectPath, ".editorconfig"), editorConfigContent);
+
+  console.log(`Adding and commiting to git`);
+  spawnCommand("git", ["add", "."]);
+  spawnCommand("git", ["commit", "-m", `"Initialize project."`]);
 }

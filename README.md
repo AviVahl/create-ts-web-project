@@ -11,7 +11,7 @@ npm init ts-web-project <project-name>
 ## Features
 
 - `package.json` - created and adjusted to native esm.
-- `.git` and node-specific `.gitignore` - initialized in folder, and ready for first commit.
+- `.git` and node-specific `.gitignore` - initialized in folder, with initial structure committed.
 - `LICENSE` - creates an MIT license and adjusts `package.json`.
 - `tsconfig.json` - strict one, with "node16" module/moduleResolution.
 - `"scripts"` in package.json - `start`, `build`, and `clean`.
