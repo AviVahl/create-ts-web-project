@@ -21,7 +21,7 @@ export function amendPackageJson(packageJson: PackageJson): PackageJson {
       watch: "npm run build -- -w",
       start: "node scripts/start.js",
     },
-    devDependencies: packageJson.devDependencies,
+    devDependencies: { ...packageJson.devDependencies },
     prettier: {},
     engines: {
       node: ">=16",
