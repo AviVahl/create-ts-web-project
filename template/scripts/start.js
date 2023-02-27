@@ -5,7 +5,6 @@ import { readFileSync } from "node:fs";
 import { once } from "node:events";
 import ts from "typescript";
 import express from "express";
-import { WebSocketServer } from "ws";
 
 const {
   // @ts-expect-error internal helper function
@@ -21,17 +20,31 @@ const projectRootPath = fileURLToPath(new URL("..", import.meta.url));
 const indexHTMLFileURL = new URL("../index.html", import.meta.url);
 const PORT = 3000;
 
+/** @type {Set<express.Response>} */
+const connectedClients = new Set();
+
 const app = express();
 app.disable("x-powered-by");
+app.get("/_dev", (_request, response) => {
+  connectedClients.add(response);
+  response.set({
+    "Cache-Control": "no-cache",
+    "Content-Type": "text/event-stream",
+    Connection: "keep-alive",
+  });
+  response.flushHeaders();
+  response.write("retry: 10000\n\n");
+  response.once("close", () => connectedClients.delete(response));
+});
 app.get(["/", "/index.html"], (_request, response) => {
   const indexHTMLContents = readFileSync(indexHTMLFileURL, "utf8");
   response.type("html");
   response.end(injectLiveClient(indexHTMLContents));
 });
+
 app.use(express.static(projectRootPath));
 
 const httpServer = app.listen(PORT);
-const wss = new WebSocketServer({ server: httpServer });
 await once(httpServer, "listening");
 
 const tsconfigPath = fileURLToPath(
@@ -64,10 +77,8 @@ const watchCompilerHost = createWatchCompilerHost(
 createWatchProgram(watchCompilerHost);
 
 function reloadConnectedClients() {
-  for (const client of wss.clients) {
-    if (client.readyState === client.OPEN) {
-      client.send("reload");
-    }
+  for (const client of connectedClients) {
+    client.write("data: reload\n\n");
   }
 }
 
@@ -81,11 +92,8 @@ function injectLiveClient(html) {
     ? html
     : html.slice(0, bodyCloseIdx) +
         `  <script>
-      const wsURL = new URL(window.location.href);
-      wsURL.protocol = "ws";
-      wsURL.hash = "";
-      const ws = new WebSocket(wsURL);
-      ws.addEventListener("message", ({ data }) => {
+      const source = new EventSource('/_dev');
+      source.addEventListener("message", ({ data }) => {
         if (data === "reload") {
           window.location.reload();
         }
