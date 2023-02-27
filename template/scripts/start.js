@@ -15,7 +15,7 @@ const {
   createWatchProgram,
 } = ts;
 
-await import(new URL("./clean.js", import.meta.url).href);
+await import("./clean.js");
 
 const projectRootPath = fileURLToPath(new URL("..", import.meta.url));
 const indexHTMLFileURL = new URL("../index.html", import.meta.url);
