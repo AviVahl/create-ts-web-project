@@ -92,9 +92,10 @@ function injectLiveClient(html) {
     ? html
     : html.slice(0, bodyCloseIdx) +
         `  <script>
-      const source = new EventSource('/_dev');
-      source.addEventListener("message", ({ data }) => {
+      const eventSource = new EventSource('/_dev');
+      eventSource.addEventListener("message", ({ data }) => {
         if (data === "reload") {
+          eventSource.close();
           window.location.reload();
         }
       });
