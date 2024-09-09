@@ -7,7 +7,7 @@
     "create-ts-web-project": "bin/create-ts-web-project.js"
   },
   "devDependencies": {
-    "@types/node": "18",
+    "@types/node": "20",
     "typescript": "~5.6.2"
   },
   "scripts": {
