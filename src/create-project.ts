@@ -10,7 +10,7 @@ import {
   prettierIgnoreContent,
   srcMainContent,
   tscInitOptions,
-} from "./helpers.js";
+} from "./helpers.ts";
 
 export async function createProject(projectName: string) {
   const projectPath = join(process.cwd(), projectName);
