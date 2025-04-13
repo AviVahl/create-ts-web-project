@@ -24,8 +24,8 @@ export function amendPackageJson(packageJson: PackageJson): PackageJson {
     devDependencies: { ...packageJson.devDependencies },
     prettier: {},
     engines: {
-      node: ">=16",
-      npm: ">=8",
+      node: ">=22",
+      npm: ">=10",
     },
   };
 
@@ -68,9 +68,9 @@ export const editorConfigContent = [
 
 export const tscInitOptions = [
   "--target",
-  "es2022",
+  "es2023",
   "--lib",
-  "es2022,dom",
+  "es2023,dom",
   "--module",
   "node16",
   "--moduleResolution",
@@ -81,15 +81,9 @@ export const tscInitOptions = [
   "--verbatimModuleSyntax",
   "--skipLibCheck",
   "false",
-  "--skipDefaultLibCheck",
-  "--noUnusedLocals",
-  "--noUnusedParameters",
-  "--exactOptionalPropertyTypes",
-  "--noImplicitReturns",
-  "--noFallthroughCasesInSwitch",
   "--noUncheckedIndexedAccess",
-  "--noImplicitOverride",
-  "--noPropertyAccessFromIndexSignature",
+  "--isolatedModules",
+  "--erasableSyntaxOnly",
   "--newLine",
   "lf",
   "--outDir",
