@@ -27,7 +27,10 @@ export async function createProject(projectName: string) {
   } as const;
 
   function spawnCommand(command: string, args: readonly string[]) {
-    const { output, status } = spawnSync(command, args, spawnOptions);
+    const { output, status } = spawnSync(
+      [command, ...args].join(" "),
+      spawnOptions
+    );
     if (status !== 0) {
       console.log(output.filter((v) => !!v).join("\n"));
       throw new Error(
