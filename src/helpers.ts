@@ -67,28 +67,19 @@ export const editorConfigContent = [
 ].join("\n");
 
 export const tscInitOptions = [
-  "--target",
-  "es2023",
-  "--lib",
-  "es2023,dom",
-  "--module",
-  "node16",
-  "--moduleResolution",
-  "node16",
-  "--types",
-  " ",
+  ["--target", "es2024"],
+  ["--lib", "es2024,dom"],
   "--sourceMap",
   "--verbatimModuleSyntax",
-  "--skipLibCheck",
-  "false",
+  ["--skipLibCheck", "false"],
+  ["--exactOptionalPropertyTypes", "false"],
   "--noUncheckedIndexedAccess",
   "--isolatedModules",
   "--erasableSyntaxOnly",
-  "--newLine",
-  "lf",
-  "--outDir",
-  "./dist",
-];
+  ["--newLine", "lf"],
+  ["--outDir", "./dist"],
+  ["--moduleDetection", "auto"],
+].flat();
 
 export const srcMainContent = `document.body.appendChild(document.createTextNode("Hello World"));\n`;
 export const prettierIgnoreContent = ["dist", "tsconfig.json", ""].join("\n");
