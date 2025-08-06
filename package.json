@@ -1,6 +1,6 @@
 {
   "name": "create-ts-web-project",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Quickly create a tiny web project",
   "type": "module",
   "bin": {
