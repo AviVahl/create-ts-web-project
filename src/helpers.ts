@@ -79,6 +79,8 @@ export const tscInitOptions = [
   ["--newLine", "lf"],
   ["--outDir", "./dist"],
   ["--moduleDetection", "auto"],
+  "--allowImportingTsExtensions",
+  "--rewriteRelativeImportExtensions",
 ].flat();
 
 export const srcMainContent = `document.body.appendChild(document.createTextNode("Hello World"));\n`;
