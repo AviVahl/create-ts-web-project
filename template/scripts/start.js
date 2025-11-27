@@ -48,7 +48,7 @@ const httpServer = app.listen(PORT);
 await once(httpServer, "listening");
 
 const tsconfigPath = fileURLToPath(
-  new URL("../tsconfig.json", import.meta.url)
+  new URL("../tsconfig.json", import.meta.url),
 );
 
 /** @type import('typescript').WatchStatusReporter */
@@ -71,7 +71,7 @@ const watchCompilerHost = createWatchCompilerHost(
   sys,
   undefined,
   undefined,
-  statusReporter
+  statusReporter,
 );
 
 createWatchProgram(watchCompilerHost);

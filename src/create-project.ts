@@ -29,14 +29,14 @@ export async function createProject(projectName: string) {
   function spawnCommand(command: string, args: readonly string[]) {
     const { output, status } = spawnSync(
       [command, ...args].join(" "),
-      spawnOptions
+      spawnOptions,
     );
     if (status !== 0) {
       console.log(output.filter((v) => !!v).join("\n"));
       throw new Error(
         `Command "${command} ${args.join(" ")}" failed with exit code ${String(
-          status
-        )}.`
+          status,
+        )}.`,
       );
     }
   }
@@ -62,12 +62,12 @@ export async function createProject(projectName: string) {
   console.log(`Amending package.json`);
   const packageJsonPath = join(projectPath, "package.json");
   const originalPackageJson = JSON.parse(
-    await readFile(packageJsonPath, "utf8")
+    await readFile(packageJsonPath, "utf8"),
   );
   const newPackageJson = amendPackageJson(originalPackageJson);
   await writeFile(
     packageJsonPath,
-    JSON.stringify(newPackageJson, null, 2) + "\n"
+    JSON.stringify(newPackageJson, null, 2) + "\n",
   );
   console.log(`Reinstalling deps post package.json change`);
   spawnCommand("npm", ["install"]);
@@ -92,14 +92,14 @@ export async function createProject(projectName: string) {
   for (const fileName of ["clean.js", "start.js"]) {
     await copyFile(
       new URL(`../template/scripts/${fileName}`, import.meta.url),
-      join(scriptsPath, fileName)
+      join(scriptsPath, fileName),
     );
   }
 
   console.log(`Creating index.html`);
   await copyFile(
     new URL(`../template/index.html`, import.meta.url),
-    join(projectPath, "index.html")
+    join(projectPath, "index.html"),
   );
 
   console.log(`Creating .editorconfig`);
