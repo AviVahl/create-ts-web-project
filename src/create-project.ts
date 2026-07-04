@@ -54,7 +54,7 @@ export async function createProject(projectName: string) {
   spawnCommand("npx", ["license", "MIT"]);
 
   console.log(`Installing dev dependencies`);
-  spawnCommand("npm", ["install", "-D", "typescript", "express"]);
+  spawnCommand("npm", ["install", "-D", "typescript", "express", "prettier"]);
 
   console.log(`Creating tsconfig.json`);
   spawnCommand("npx", ["tsc", "--init", ...tscInitOptions]);
