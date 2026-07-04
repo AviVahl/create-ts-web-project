@@ -85,5 +85,5 @@ export const tscInitOptions = [
 ].flat();
 
 export const srcMainContent = `document.body.appendChild(document.createTextNode("Hello World"));\n`;
-export const prettierIgnoreContent = ["dist", "tsconfig.json", ""].join("\n");
+export const prettierIgnoreContent = `dist\n`;
 export const npmRcContent = `engine-strict=true\n`;
