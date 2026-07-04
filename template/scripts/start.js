@@ -86,7 +86,7 @@ function printAddress() {
   console.log(`Listening on: http://localhost:${PORT}`);
 }
 
-function injectLiveClient(html) {
+function injectLiveClient(/** @type {string} */ html) {
   const bodyCloseIdx = html.lastIndexOf("</body>");
   return bodyCloseIdx === -1
     ? html
