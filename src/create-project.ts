@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   amendPackageJson,
@@ -89,15 +89,12 @@ export async function createProject(projectName: string) {
   console.log(`Initializing scripts`);
   const scriptsPath = join(projectPath, "scripts");
   await mkdir(scriptsPath);
-  for (const fileName of ["clean.js", "start.js"]) {
-    await copyFile(
-      new URL(`../template/scripts/${fileName}`, import.meta.url),
-      join(scriptsPath, fileName),
-    );
-  }
+  await cp(new URL(`../template/scripts`, import.meta.url), scriptsPath, {
+    recursive: true,
+  });
 
   console.log(`Creating index.html`);
-  await copyFile(
+  await cp(
     new URL(`../template/index.html`, import.meta.url),
     join(projectPath, "index.html"),
   );
