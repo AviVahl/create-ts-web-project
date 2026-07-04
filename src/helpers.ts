@@ -67,18 +67,19 @@ export const editorConfigContent = [
 ].join("\n");
 
 export const tscInitOptions = [
+  ["--rootDir", "./src"],
+  ["--outDir", "./dist"],
+
   ["--target", "es2024"],
   ["--lib", "es2024,dom"],
-  "--sourceMap",
-  "--verbatimModuleSyntax",
   ["--skipLibCheck", "false"],
   ["--exactOptionalPropertyTypes", "false"],
-  "--noUncheckedIndexedAccess",
-  "--isolatedModules",
+  ["--moduleDetection", "auto"],
+  ["--declaration", "false"],
+  ["--declarationMap", "false"],
+
   "--erasableSyntaxOnly",
   ["--newLine", "lf"],
-  ["--outDir", "./dist"],
-  ["--moduleDetection", "auto"],
   "--allowImportingTsExtensions",
   "--rewriteRelativeImportExtensions",
 ].flat();
