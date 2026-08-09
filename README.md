@@ -1,4 +1,4 @@
-# create-ts-web-project
+# create-ts-web-project [![npm version](https://img.shields.io/npm/v/create-ts-web-project)](https://www.npmjs.com/package/create-ts-web-project)
 
 Quickly create a TypeScript web project.
 
